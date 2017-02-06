@@ -15,45 +15,30 @@ public class Calculator {
 
     
     public static void main(String[] args) throws IOException {
-        BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+        final int ESC = 27;
+        final int BACKSPACE = 8;
         String input = "";
-        String prevIn = "";
-        String prevOut = "";
-        String resp = "";
-        String errorMess = "Invalid input...";
+        int ascii = -1;
         BigDecimal total = BigDecimal.valueOf(0.0);
-        //finchè l'utente non scrive "quit", quando l'input subisce una variazione viene effettuato un nuovo calcolo
-        while (!input.equalsIgnoreCase("quit")) {
-            input = in.readLine();
-            if(!input.equalsIgnoreCase(prevIn)){
-                prevIn = input;
-                try{
+        while (ascii!=ESC) {
+            ascii = RawConsoleInput.read(true);
+            switch (ascii) {
+                case BACKSPACE: 
+                    input = input.substring(0, input.length()-1);
+                    break;
+                case ESC:
+                    break;
+                default:
+                    if((ascii>=40&&ascii<=43)||(ascii>=45&&ascii<=57)||(ascii==94)) { 
+                    input = input+Character.toString((char)ascii);
                     total = Calculator.Calculate(input);
-                    //cancello tutta la riga e riporto il token a inizio riga per scrivere, se serve
-                    if(total.toString().length() < prevOut.length()){
-                        resp = "";
-                        while(resp.length() != total.toString().length()){
-                            resp = resp + "\b";
-                        }
-                        System.out.println(resp + "\r");
                     }
-                    prevOut = total.toString();
-                    System.out.println(total.toString() + "\r");
-                }catch(ArrayIndexOutOfBoundsException exc){
-                    if(errorMess.length() < prevOut.length()){
-                        resp = "";
-                        while(resp.length() != errorMess.length()){
-                            resp = resp + "\b";
-                        }
-                        System.out.println(resp + "\r");
-                    }
-                    prevOut = errorMess;
-                    System.out.println(errorMess + "\r");
-                }
-            }
+                    break;
+            }   
+            RawConsoleInput.cls();
+            System.out.println("INPUT: "+input);
+            System.out.println("OUTPUT: "+total.toString());
         }
-        
-        in.close();
         //Calculator.Test();
     }
     

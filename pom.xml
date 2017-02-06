@@ -3,11 +3,46 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.whitepeak</groupId>
     <artifactId>Calculator</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
     <packaging>jar</packaging>
+    <dependencies>
+        <dependency>
+            <groupId>net.java.dev.jna</groupId>
+            <artifactId>jna</artifactId>
+            <version>4.3.0</version>
+        </dependency>
+    </dependencies>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.7</maven.compiler.source>
         <maven.compiler.target>1.7</maven.compiler.target>
     </properties>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <executions>
+                  <execution>
+                    <id>bundle-with-jar</id>
+                    <phase>package</phase>
+                    <goals>
+                      <goal>single</goal>
+                    </goals>
+                    <configuration>
+                      <descriptorRefs>
+                            <descriptorRef>jar-with-dependencies</descriptorRef>
+                      </descriptorRefs>
+                      <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <mainClass>com.whitepeak.calculator.Calculator</mainClass>
+                        </manifest>
+                      </archive>
+                    </configuration>
+                  </execution>
+                </executions>
+              </plugin>
+        </plugins>
+    </build>
 </project>
