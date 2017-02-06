@@ -1,11 +1,13 @@
 package com.whitepeak.calculator;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
+import org.fusesource.jansi.Ansi;
+import org.fusesource.jansi.AnsiConsole;
+import static org.fusesource.jansi.Ansi.*;
+import static org.fusesource.jansi.Ansi.Color.*;
 
 /**
  *
@@ -15,30 +17,37 @@ public class Calculator {
 
     
     public static void main(String[] args) throws IOException {
+        AnsiConsole.systemInstall();
         final int ESC = 27;
         final int BACKSPACE = 8;
         String input = "";
         int ascii = -1;
-        BigDecimal total = BigDecimal.valueOf(0.0);
+        String total = "";
         while (ascii!=ESC) {
             ascii = RawConsoleInput.read(true);
             switch (ascii) {
                 case BACKSPACE: 
-                    input = input.substring(0, input.length()-1);
+                    if(input.length()>0)
+                        input = input.substring(0, input.length()-1);
                     break;
                 case ESC:
                     break;
                 default:
                     if((ascii>=40&&ascii<=43)||(ascii>=45&&ascii<=57)||(ascii==94)) { 
                     input = input+Character.toString((char)ascii);
-                    total = Calculator.Calculate(input);
+                        try {
+                            total = String.valueOf(Calculator.Calculate(input));
+                        } catch (ArrayIndexOutOfBoundsException exc) {
+                            total = "Invalid Input...";
+                        }
                     }
                     break;
             }   
-            RawConsoleInput.cls();
-            System.out.println("INPUT: "+input);
-            System.out.println("OUTPUT: "+total.toString());
+            System.out.println(ansi().eraseScreen(Ansi.Erase.ALL).fg(RED).a("INPUT: ").fg(WHITE).a(input).reset());
+            System.out.println();
+            System.out.println(ansi().fg(GREEN).a("OUTPUT: ").fg(WHITE).a(total.toString()).reset());
         }
+        AnsiConsole.systemUninstall();
         //Calculator.Test();
     }
     
@@ -84,9 +93,6 @@ public class Calculator {
                 }
             }
         }
-        //Stampo espressione e risultato
-        System.out.println("INPUT: "+input);
-        System.out.println("OUTPUT: "+stack.pop());
     }
     
     public static BigDecimal Calculate (String s){
@@ -130,10 +136,7 @@ public class Calculator {
                 }
             }
         }
-        //Stampo espressione e risultato
-        System.out.println("INPUT: "+s);
         BigDecimal result = stack.pop();
-        System.out.println("OUTPUT: "+result);
         return result;
     }
 }

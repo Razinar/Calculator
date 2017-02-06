@@ -70,7 +70,6 @@ public class Transformation {
             lastChar = String.valueOf(ch); 
                 
         }
-        System.out.println(output);
         return output; 
     }
     
