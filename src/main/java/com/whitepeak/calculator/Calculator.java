@@ -63,6 +63,8 @@ public class Calculator {
             return String.valueOf(Calculator.Calculate(input));
         } catch (ArrayIndexOutOfBoundsException exc) {
             return "Invalid Input...";
+        } catch (ArithmeticException arExc) {
+            return arExc.getMessage();
         }
     }
     
@@ -110,7 +112,7 @@ public class Calculator {
         }
     }
     
-    public static BigDecimal Calculate (String s){
+    public static BigDecimal Calculate (String s) throws ArithmeticException{
         Transformation Trans = new Transformation(s);
         String postFix = Trans.toPostfix();
         String delims = "[ ]+";
@@ -141,7 +143,7 @@ public class Calculator {
                         try{
                             stack.push((a.divide(b,MathContext.DECIMAL128)).setScale(9, RoundingMode.HALF_UP));
                         }catch(ArithmeticException ArExc){
-
+                           throw ArExc;
                         }
                         break;
 
