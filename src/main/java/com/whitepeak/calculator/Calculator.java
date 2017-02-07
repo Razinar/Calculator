@@ -1,15 +1,16 @@
 package com.whitepeak.calculator;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
 
+import jline.AnsiWindowsTerminal;
 import jline.console.ConsoleReader;
 import org.fusesource.jansi.Ansi;
 import org.fusesource.jansi.AnsiConsole;
-import static org.fusesource.jansi.Ansi.*;
-import static org.fusesource.jansi.Ansi.Color.*;
+import org.fusesource.jansi.AnsiRenderer;
 
 /**
  *
@@ -18,15 +19,17 @@ import static org.fusesource.jansi.Ansi.Color.*;
 public class Calculator {
 
     
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException,Exception {
         AnsiConsole.systemInstall();
-        ConsoleReader reader = new ConsoleReader();
+        ConsoleReader reader = new ConsoleReader(System.in, System.out);
+        System.out.println(Ansi.ansi().eraseScreen());
+        PrintWriter out = new PrintWriter(reader.getOutput());
         final int ESC = 27;
         final int BACKSPACE = 8;
         String input = "Type an expression to begin...";
         int ascii = -1;
         String total = "Real time calculation";
-        UI(input,total);
+        UI(out,input,total);
         input="";
         total="";
         while (ascii!=ESC) {
@@ -49,16 +52,21 @@ public class Calculator {
                     }
                     break;
             }   
-            UI(input,total);
+            UI(out,input,total);
         }
+        System.out.println(Ansi.ansi().eraseScreen());
         AnsiConsole.systemUninstall();
         //Calculator.Test();
     }
     
-    private static void UI(String input, String output) {
-        System.out.println(ansi().eraseScreen(Ansi.Erase.ALL).bg(BLACK).fg(RED).a("INPUT : ").fg(WHITE).a(input).reset());
-        System.out.println();
-        System.out.println(ansi().fg(GREEN).a("OUTPUT: ").bg(BLACK).fg(WHITE).a(output).reset());
+    private static void UI(PrintWriter out,String input, String output) throws IOException{
+        out.println(Ansi.ansi().cursor(0,0));
+        out.println(Ansi.ansi().bgBright(Ansi.Color.RED));
+        out.println(Ansi.ansi().eraseLine().fgRed().bold().a("INPUT : ").fgDefault().boldOff().a(input).saveCursorPosition());
+        out.println(Ansi.ansi().eraseLine().a(""));
+        out.println(Ansi.ansi().eraseLine().fgGreen().bold().a("OUTPUT: ").boldOff().fgDefault().a(output));
+        out.println(Ansi.ansi().restoreCursorPosition());
+        out.flush();
     }
     
     private static String calculateString(String input) {
