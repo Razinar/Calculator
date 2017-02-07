@@ -20,35 +20,50 @@ public class Calculator {
         AnsiConsole.systemInstall();
         final int ESC = 27;
         final int BACKSPACE = 8;
-        String input = "";
+        String input = "Type an expression to begin...";
         int ascii = -1;
-        String total = "";
+        String total = "Real time calculation";
+        UI(input,total);
+        input="";
+        total="";
         while (ascii!=ESC) {
             ascii = RawConsoleInput.read(true);
             switch (ascii) {
                 case BACKSPACE: 
-                    if(input.length()>0)
+                    if(input.length()>0) {
                         input = input.substring(0, input.length()-1);
+                        total = calculateString(input);
+                    }
                     break;
                 case ESC:
                     break;
                 default:
+                    //If it is ()*+ or -./d or exp then accept the character
+                    //otherwise don't consider the last input
                     if((ascii>=40&&ascii<=43)||(ascii>=45&&ascii<=57)||(ascii==94)) { 
-                    input = input+Character.toString((char)ascii);
-                        try {
-                            total = String.valueOf(Calculator.Calculate(input));
-                        } catch (ArrayIndexOutOfBoundsException exc) {
-                            total = "Invalid Input...";
-                        }
+                        input = input+Character.toString((char)ascii);
+                        total = calculateString(input);
                     }
                     break;
             }   
-            System.out.println(ansi().eraseScreen(Ansi.Erase.ALL).fg(RED).a("INPUT: ").fg(WHITE).a(input).reset());
-            System.out.println();
-            System.out.println(ansi().fg(GREEN).a("OUTPUT: ").fg(WHITE).a(total.toString()).reset());
+            UI(input,total);
         }
         AnsiConsole.systemUninstall();
         //Calculator.Test();
+    }
+    
+    private static void UI(String input, String output) {
+        System.out.println(ansi().eraseScreen(Ansi.Erase.ALL).fg(RED).a("INPUT : ").fg(WHITE).a(input).reset());
+        System.out.println();
+        System.out.println(ansi().fg(GREEN).a("OUTPUT: ").fg(WHITE).a(output).reset());
+    }
+    
+    private static String calculateString(String input) {
+        try {
+            return String.valueOf(Calculator.Calculate(input));
+        } catch (ArrayIndexOutOfBoundsException exc) {
+            return "Invalid Input...";
+        }
     }
     
     public static void Test(){
