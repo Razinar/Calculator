@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
+
+import jline.console.ConsoleReader;
 import org.fusesource.jansi.Ansi;
 import org.fusesource.jansi.AnsiConsole;
 import static org.fusesource.jansi.Ansi.*;
@@ -18,6 +20,7 @@ public class Calculator {
     
     public static void main(String[] args) throws IOException {
         AnsiConsole.systemInstall();
+        ConsoleReader reader = new ConsoleReader();
         final int ESC = 27;
         final int BACKSPACE = 8;
         String input = "Type an expression to begin...";
@@ -27,7 +30,7 @@ public class Calculator {
         input="";
         total="";
         while (ascii!=ESC) {
-            ascii = RawConsoleInput.read(true);
+            ascii = reader.readCharacter();
             switch (ascii) {
                 case BACKSPACE: 
                     if(input.length()>0) {
@@ -53,9 +56,9 @@ public class Calculator {
     }
     
     private static void UI(String input, String output) {
-        System.out.println(ansi().eraseScreen(Ansi.Erase.ALL).fg(RED).a("INPUT : ").fg(WHITE).a(input).reset());
+        System.out.println(ansi().eraseScreen(Ansi.Erase.ALL).bg(BLACK).fg(RED).a("INPUT : ").fg(WHITE).a(input).reset());
         System.out.println();
-        System.out.println(ansi().fg(GREEN).a("OUTPUT: ").fg(WHITE).a(output).reset());
+        System.out.println(ansi().fg(GREEN).a("OUTPUT: ").bg(BLACK).fg(WHITE).a(output).reset());
     }
     
     private static String calculateString(String input) {
