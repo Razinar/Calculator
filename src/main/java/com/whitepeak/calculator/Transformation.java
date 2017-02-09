@@ -8,8 +8,8 @@ public class Transformation {
     private TranStack stack;
     private String input, lastChar, output;
     private boolean negOrPos;
-    
-    
+
+
     public Transformation(String in) {
        input = in;
        output = "";
@@ -18,26 +18,25 @@ public class Transformation {
        int stackSize = input.length();
        stack = new TranStack(stackSize);
     }
-    
+
     public String toPostfix() {
-        //String formString = this.formatInput();
-        //System.out.println("FORMATTATA: "+formString+'\n');
-        if(parenthesesControl()) {
-            for (int i = 0; i < input.length(); i++) {
-                char ch = input.charAt(i);
+        String safeInput = formatInput();
+        if(!safeInput.equalsIgnoreCase("Invalid input")) {
+            for (int i = 0; i < safeInput.length(); i++) {
+                char ch = safeInput.charAt(i);
                 switch (ch) {
-                    case '+': 
+                    case '+':
                     case '-':
-                        operator(ch, 1); 
+                        operator(ch, 1);
                         break;
 
-                    case '*': 
+                    case '*':
                     case '/':
                     case '^':
-                        operator(ch, 2); 
-                        break; 
+                        operator(ch, 2);
+                        break;
 
-                    case '(': 
+                    case '(':
                         stack.push(ch);
                         negOrPos = true;
                         if(!lastChar.equals("") && !lastChar.equals(" ")){
@@ -46,11 +45,11 @@ public class Transformation {
                         }
                         break;
 
-                    case ')': 
-                        parentheses(); 
+                    case ')':
+                        parentheses();
                         break;
 
-                    default: 
+                    default:
                         if((lastChar.equals("+")||lastChar.equals("-")||
                            lastChar.equals("*")||lastChar.equals("/")||
                            lastChar.equals("^"))&& negOrPos==false)
@@ -65,16 +64,16 @@ public class Transformation {
             while (!stack.isEmpty()) {
                 char ch = stack.pop();
                 if(lastChar.equals(" "))
-                    output = output + ch;    
+                    output = output + ch;
                 else
                     output = output + " " + ch;
-                lastChar = String.valueOf(ch); 
+                lastChar = String.valueOf(ch);
 
             }
         }
-        return output; 
+        return output;
     }
-    
+
     public void operator(char inputOp, int opType) {
         if(negOrPos == false){
             boolean wasEmpty = true;
@@ -84,7 +83,7 @@ public class Transformation {
                 if (topOperation == '(') {
                     stack.push(topOperation);
                     if(!lastChar.equals(" ")){
-                        output = output + " ";      
+                        output = output + " ";
                         lastChar = " ";
                     }
                     break;
@@ -97,14 +96,14 @@ public class Transformation {
                     if (topType < opType) {
                         stack.push(topOperation);
                         if(!lastChar.equals(" ")){
-                            output = output + " ";     
+                            output = output + " ";
                             lastChar = " ";
                         }
                         break;
-                    } 
-                    else{ 
+                    }
+                    else{
                         if(!lastChar.equals(" "))
-                            output = output + " " + topOperation;   
+                            output = output + " " + topOperation;
                         else
                             output = output + topOperation;
                         lastChar = String.valueOf(topOperation);
@@ -119,20 +118,20 @@ public class Transformation {
                 output = output + " ";
                 lastChar = " ";
             }
-            
+
         }
         else{
             output = output + inputOp;
             lastChar = String.valueOf(inputOp);
         }    //aggiunto questo if else in modo da assegnare non come operatore ma come segno del numero
     }
-    
-    public void parentheses() { 
+
+    public void parentheses() {
         while (!stack.isEmpty()) {
             char ch = stack.pop();
-            if (ch == '(') 
-                break; 
-            else{ 
+            if (ch == '(')
+                break;
+            else{
                 if(lastChar.equals(" "))
                     output = output + ch + " ";
                 else
@@ -141,24 +140,84 @@ public class Transformation {
             }
         }
     }
-    
-    public boolean parenthesesControl () {
-        int openPars = 0;
-        int closedPars = 0;
-        for(int x=0; x<input.length(); x++){
-            switch(input.charAt(x)){
-                case '(':
-                    openPars++;
-                    if(x>0 &&(input.charAt(x-1) == '.' || Character.isDigit(input.charAt(x-1)) ))
-                        return false;
-                    break;
-                case ')':
-                    closedPars++;
-                    if((x+1<input.length())&&(input.charAt(x+1) == '.' || Character.isDigit(input.charAt(x+1)) ))
-                        return false;
-                    break;
-            }
-        }
-        return openPars == closedPars;
-    }
+
+    public String formatInput () {
+	   StringBuffer formatted = new StringBuffer(input);
+	   if(formatted.length()>0){
+		   //fix input starting with + or -
+		   if(formatted.charAt(0) == '+' || formatted.charAt(0) == '-')
+			   formatted.insert(0, '0');
+
+		   //int openPars = 0;
+	       //int closedPars = 0;
+	       for(int x=0; x<formatted.length(); x++){
+	    	   switch(formatted.charAt(x)){
+	               case '(':
+	                   //openPars++;
+	                   if(x>1 &&(formatted.charAt(x-1) == '.' || Character.isDigit(formatted.charAt(x-1)) ))
+	                       return "Invalid input";
+	                   break;
+
+	               case ')':
+	                   //closedPars++;
+	                   if((x+1<formatted.length())&&(formatted.charAt(x+1) == '.' || Character.isDigit(formatted.charAt(x+1)) ))
+	                	   return "Invalid input";
+	                   break;
+
+	               //fix input with redundant or consecutive operators
+	               case '+':
+	            	   if(x>1){
+		            	   if((formatted.charAt(x-1) == '-') || (formatted.charAt(x-1) == '+')){
+		            		   formatted.deleteCharAt(x);
+		            		   x--;
+		            	   }
+	            	   }
+	            	   break;
+
+
+	               case '-':
+	            	   if(x>1){
+		            	   if((formatted.charAt(x-1) == '-')){
+		            		   formatted.setCharAt(x, '+');
+		            		   formatted.deleteCharAt(x-1);
+		            		   x--;
+		            		   break;
+		            	   }
+
+		            	   if(x>0 && (formatted.charAt(x-1) == '+')){
+		            		   formatted.deleteCharAt(x-1);
+		            		   x--;
+		            	   }
+	            	   }
+	            	   break;
+        	   }
+
+    	   }
+	       for (int x = 0; x<formatted.length(); x++){
+		       if(x>1){
+		    	   if((formatted.charAt(x-1) == '*') || (formatted.charAt(x-1) == '/') || (formatted.charAt(x-1) == '^')){
+	        		   if(formatted.charAt(x) != '('){
+	        			   formatted.insert(x, '(');
+		        		   int beforeClosing = 2;
+		        		   for(int i=0; i<formatted.length();i++){
+		        			   if(x+2+i>formatted.length()-1)
+		        				   break;
+		        			   if(formatted.charAt(x+2+i)=='.' || Character.isDigit(formatted.charAt(x+2+i)))
+		        				   beforeClosing++;
+		        			   else
+		        				   break;
+		        		   }
+
+		        		   if(x+beforeClosing>formatted.length()-1)
+		        			   formatted.append(')');
+		        		   else
+		        			   formatted.insert(x+beforeClosing, ')');
+	        		   }
+
+	    		   }
+	    	   }
+	       }
+       }
+       return String.valueOf(formatted);
+   }
 }

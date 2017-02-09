@@ -39,7 +39,7 @@ public class TestUnits {
     @Test
     public void testParenthesis() throws Exception{
         String input = "(5-6)*-6";
-        Assert.assertEquals(Calculator.Calculate(input).doubleValue(), 1,0);
+        Assert.assertEquals(Calculator.Calculate(input).doubleValue(), 6,0);
     }
 
     @Test
