@@ -5,11 +5,16 @@ import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
+import java.util.logging.Level;
 
+
+import java.util.logging.Logger;
+import static com.whitepeak.calculator.enums.Messages.*;
 import jline.console.ConsoleReader;
 import org.fusesource.jansi.Ansi;
 import org.fusesource.jansi.AnsiConsole;
 import com.whitepeak.calculator.enums.Operators;
+
 
 import static com.whitepeak.calculator.enums.Operators.*;
 
@@ -27,12 +32,12 @@ public class Calculator {
         PrintWriter out = new PrintWriter(reader.getOutput());
         final int ESC = 27;
         final int BACKSPACE = 8;
-        String input = "Type an expression to begin...";
+        String input = INPUT.toString();
         int ascii = -1;
-        String total = "Real time calculation";
+        String total = TOTAL.toString();
         UI(out,input,total);
-        input="";
-        total="";
+        input=EMPTY.toString();
+        total= EMPTY.toString();
         while (ascii!=ESC) {
             ascii = reader.readCharacter();
             switch (ascii) {
@@ -57,15 +62,14 @@ public class Calculator {
         }
         System.out.println(Ansi.ansi().eraseScreen());
         AnsiConsole.systemUninstall();
-        //Calculator.Test();
     }
     
     private static void UI(PrintWriter out,String input, String output) throws IOException{
         out.println(Ansi.ansi().cursor(0,0));
         out.println(Ansi.ansi().bgBright(Ansi.Color.RED));
-        out.println(Ansi.ansi().eraseLine().fgRed().bold().a("INPUT : ").fgDefault().boldOff().a(input).saveCursorPosition());
+        out.println(Ansi.ansi().eraseLine().fgRed().bold().a(INPUTUI.toString()).fgDefault().boldOff().a(input).saveCursorPosition());
         out.println(Ansi.ansi().eraseLine().a(""));
-        out.println(Ansi.ansi().eraseLine().fgGreen().bold().a("OUTPUT: ").boldOff().fgDefault().a(output));
+        out.println(Ansi.ansi().eraseLine().fgGreen().bold().a(OUTPUTUI.toString()).boldOff().fgDefault().a(output));
         out.println(Ansi.ansi().restoreCursorPosition());
         out.flush();
     }
@@ -74,9 +78,11 @@ public class Calculator {
         try {
             return String.valueOf(Calculator.Calculate(input));
         } catch (ArrayIndexOutOfBoundsException exc) {
-            return "Invalid Input...";
+            Logger.getGlobal().log(Level.SEVERE,exc.getStackTrace().toString());
+            return CALCULATOR_EXCEPTION.toString();
         } catch (ArithmeticException arExc) {
-            return arExc.getMessage();
+            Logger.getGlobal().log(Level.SEVERE,arExc.getStackTrace().toString());
+            return CALCULATOR_EXCEPTION.toString();
         }
     }
     
