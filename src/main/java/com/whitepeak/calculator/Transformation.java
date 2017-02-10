@@ -1,5 +1,10 @@
 package com.whitepeak.calculator;
 
+import com.whitepeak.calculator.enums.Operators;
+
+import static com.whitepeak.calculator.enums.Operators.*;
+
+
 /**
  *
  * @author Stefano Galli
@@ -24,19 +29,20 @@ public class Transformation {
         if(!safeInput.equalsIgnoreCase("Invalid input")) {
             for (int i = 0; i < safeInput.length(); i++) {
                 char ch = safeInput.charAt(i);
-                switch (ch) {
-                    case '+':
-                    case '-':
+                Operators op = Operators.get(ch);
+                switch (op) {
+                    case PLUS:
+                    case MINUS:
                         operator(ch, 1);
                         break;
 
-                    case '*':
-                    case '/':
-                    case '^':
+                    case TIMES:
+                    case DIVIDE:
+                    case EXP:
                         operator(ch, 2);
                         break;
 
-                    case '(':
+                    case LPAR:
                         stack.push(ch);
                         negOrPos = true;
                         if(!lastChar.equals("") && !lastChar.equals(" ")){
@@ -45,7 +51,7 @@ public class Transformation {
                         }
                         break;
 
-                    case ')':
+                    case RPAR:
                         parentheses();
                         break;
 
@@ -80,7 +86,7 @@ public class Transformation {
             while (!stack.isEmpty()) {
                 wasEmpty = false;
                 char topOperation = stack.pop();
-                if (topOperation == '(') {
+                if (topOperation == LPAR.toChar()) {
                     stack.push(topOperation);
                     if(!lastChar.equals(" ")){
                         output = output + " ";
@@ -89,7 +95,7 @@ public class Transformation {
                     break;
                 } else {
                     int topType;
-                    if (topOperation == '+' || topOperation == '-')
+                    if (topOperation == PLUS.toChar() || topOperation == MINUS.toChar())
                         topType = 1;
                     else
                         topType = 2;
@@ -129,7 +135,7 @@ public class Transformation {
     public void parentheses() {
         while (!stack.isEmpty()) {
             char ch = stack.pop();
-            if (ch == '(')
+            if (ch == LPAR.toChar())
                 break;
             else{
                 if(lastChar.equals(" "))
@@ -145,29 +151,29 @@ public class Transformation {
 	   StringBuffer formatted = new StringBuffer(input);
 	   if(formatted.length()>0){
 		   //fix input starting with + or -
-		   if(formatted.charAt(0) == '+' || formatted.charAt(0) == '-')
+		   if(formatted.charAt(0) == PLUS.toChar() || formatted.charAt(0) == MINUS.toChar())
 			   formatted.insert(0, '0');
 
 		   //int openPars = 0;
 	       //int closedPars = 0;
 	       for(int x=0; x<formatted.length(); x++){
-	    	   switch(formatted.charAt(x)){
-	               case '(':
+	    	   switch(Operators.get(formatted.charAt(x))){
+	               case LPAR:
 	                   //openPars++;
 	                   if(x>1 &&(formatted.charAt(x-1) == '.' || Character.isDigit(formatted.charAt(x-1)) ))
 	                       return "Invalid input";
 	                   break;
 
-	               case ')':
+	               case RPAR:
 	                   //closedPars++;
 	                   if((x+1<formatted.length())&&(formatted.charAt(x+1) == '.' || Character.isDigit(formatted.charAt(x+1)) ))
 	                	   return "Invalid input";
 	                   break;
 
 	               //fix input with redundant or consecutive operators
-	               case '+':
+	               case PLUS:
 	            	   if(x>1){
-		            	   if((formatted.charAt(x-1) == '-') || (formatted.charAt(x-1) == '+')){
+		            	   if((formatted.charAt(x-1) == MINUS.toChar()) || (formatted.charAt(x-1) == PLUS.toChar())){
 		            		   formatted.deleteCharAt(x);
 		            		   x--;
 		            	   }
@@ -175,16 +181,16 @@ public class Transformation {
 	            	   break;
 
 
-	               case '-':
+	               case MINUS:
 	            	   if(x>1){
-		            	   if((formatted.charAt(x-1) == '-')){
-		            		   formatted.setCharAt(x, '+');
+		            	   if((formatted.charAt(x-1) == MINUS.toChar())){
+		            		   formatted.setCharAt(x, PLUS.toChar());
 		            		   formatted.deleteCharAt(x-1);
 		            		   x--;
 		            		   break;
 		            	   }
 
-		            	   if(x>0 && (formatted.charAt(x-1) == '+')){
+		            	   if(x>0 && (formatted.charAt(x-1) == PLUS.toChar())){
 		            		   formatted.deleteCharAt(x-1);
 		            		   x--;
 		            	   }
@@ -195,9 +201,9 @@ public class Transformation {
     	   }
 	       for (int x = 0; x<formatted.length(); x++){
 		       if(x>1){
-		    	   if((formatted.charAt(x-1) == '*') || (formatted.charAt(x-1) == '/') || (formatted.charAt(x-1) == '^')){
-	        		   if(formatted.charAt(x) != '('){
-	        			   formatted.insert(x, '(');
+		    	   if((formatted.charAt(x-1) == TIMES.toChar()) || (formatted.charAt(x-1) == DIVIDE.toChar()) || (formatted.charAt(x-1) == EXP.toChar())){
+	        		   if(formatted.charAt(x) != LPAR.toChar()){
+	        			   formatted.insert(x, LPAR);
 		        		   int beforeClosing = 2;
 		        		   for(int i=0; i<formatted.length();i++){
 		        			   if(x+2+i>formatted.length()-1)
@@ -209,9 +215,9 @@ public class Transformation {
 		        		   }
 
 		        		   if(x+beforeClosing>formatted.length()-1)
-		        			   formatted.append(')');
+		        			   formatted.append(RPAR);
 		        		   else
-		        			   formatted.insert(x+beforeClosing, ')');
+		        			   formatted.insert(x+beforeClosing, RPAR);
 	        		   }
 
 	    		   }

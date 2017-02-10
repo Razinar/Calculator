@@ -6,11 +6,12 @@ import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
 
-import jline.AnsiWindowsTerminal;
 import jline.console.ConsoleReader;
 import org.fusesource.jansi.Ansi;
 import org.fusesource.jansi.AnsiConsole;
-import org.fusesource.jansi.AnsiRenderer;
+import com.whitepeak.calculator.enums.Operators;
+
+import static com.whitepeak.calculator.enums.Operators.*;
 
 /**
  *
@@ -93,20 +94,20 @@ public class Calculator {
             }catch(NumberFormatException e){
                 BigDecimal b = stack.pop();
                 BigDecimal a = stack.pop();
-                switch(tokens[i]){
-                    case "+":
+                switch(Operators.get(tokens[i].charAt(0))){
+                    case PLUS:
                         stack.push((a.add(b)).setScale(9, RoundingMode.HALF_UP));
                         break;
 
-                    case "-":
+                    case MINUS:
                         stack.push((a.subtract(b)).setScale(9, RoundingMode.HALF_UP));
                         break;
 
-                    case "*":
+                    case TIMES:
                         stack.push((a.multiply(b)).setScale(9, RoundingMode.HALF_UP));
                         break;
 
-                    case "/":
+                    case DIVIDE:
                         try{
                             stack.push((a.divide(b,MathContext.DECIMAL128)).setScale(9, RoundingMode.HALF_UP));
                         }catch(ArithmeticException ArExc){
@@ -114,7 +115,7 @@ public class Calculator {
                         }
                         break;
 
-                    case "^":
+                    case EXP:
                         stack.push(BigDecimal.valueOf(Math.pow(a.doubleValue(),(b.doubleValue()))));
                         break;
                 }
