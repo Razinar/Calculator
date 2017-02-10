@@ -66,7 +66,6 @@ public class Calculator {
     
     private static void UI(PrintWriter out,String input, String output) throws IOException{
         out.println(Ansi.ansi().cursor(0,0));
-        out.println(Ansi.ansi().bgBright(Ansi.Color.RED));
         out.println(Ansi.ansi().eraseLine().fgRed().bold().a(INPUTUI.toString()).fgDefault().boldOff().a(input).saveCursorPosition());
         out.println(Ansi.ansi().eraseLine().a(""));
         out.println(Ansi.ansi().eraseLine().fgGreen().bold().a(OUTPUTUI.toString()).boldOff().fgDefault().a(output));
@@ -78,14 +77,13 @@ public class Calculator {
         try {
             return String.valueOf(Calculator.Calculate(input));
         } catch (ArrayIndexOutOfBoundsException exc) {
-            Logger.getGlobal().log(Level.SEVERE,exc.getStackTrace().toString());
-            return CALCULATOR_EXCEPTION.toString();
+            return INVALID_INPUT.toString();
         } catch (ArithmeticException arExc) {
             Logger.getGlobal().log(Level.SEVERE,arExc.getStackTrace().toString());
             return CALCULATOR_EXCEPTION.toString();
         }
     }
-    
+
     public static BigDecimal Calculate (String s) throws ArithmeticException{
         Transformation Trans = new Transformation(s);
         String postFix = Trans.toPostfix();

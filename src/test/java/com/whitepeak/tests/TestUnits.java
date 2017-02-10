@@ -1,6 +1,7 @@
 package com.whitepeak.tests;
 
 import com.whitepeak.calculator.Calculator;
+import com.whitepeak.calculator.enums.Messages;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -10,6 +11,12 @@ public class TestUnits {
     public void testCalculation1() throws Exception{
         String input = "-8.1-9.0-(5.7*2-(3.8^(-1.6)-2))/1.9*3.4";
         Assert.assertEquals(Calculator.Calculate(input).doubleValue(), -40.867563636,0);
+    }
+
+    @Test
+    public void testCalculation2() throws Exception{
+        String input = "-8.1-9.0-(5.7*2-(3.8^(-1";
+        Assert.assertEquals(Calculator.Calculate(input).toString(), Messages.INVALID_INPUT.toString());
     }
 
     @Test

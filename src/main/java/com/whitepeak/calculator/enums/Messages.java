@@ -8,4 +8,9 @@ public enum Messages {
     Messages(String message) {
         this.message=message;
     }
+
+    @Override
+    public String toString() {
+        return message;
+    }
 }
