@@ -5,14 +5,24 @@ import static com.whitepeaks.calculator.enums.Operators.*;
 import static com.whitepeaks.calculator.enums.Messages.*;
 
 /**
+ * Transformation class provides methods to format user's input and
+ * transform it into PostFix notation.
+ *
  * @author Stefano Galli
  */
+
 public class Transformation {
 
     private TranStack stack;
     private String input, lastChar, output;
     private boolean negOrPos;
 
+    /**
+    * Trasformation class Constructor. Class fields are instantiated with
+    * information provided by the user.
+    *
+    * @param in User input
+    */
     public Transformation(String in) {
         input = in;
         output = EMPTY.toString();
@@ -22,6 +32,15 @@ public class Transformation {
         stack = new TranStack(stackSize);
     }
 
+    /**
+    * Core of Transformation class. After a first format, user's input gets 
+    * parsed and every char is handled. A stack is used to store operators
+    * and parentheses until they needed to be added to the output string.
+    * Operands are inserted in the output and empty spaces are properly added
+    * as delimeters.
+    *
+    * @return  Postfix notation input as String
+    */
     public String toPostfix() {
         String safeInput = formatInput();
         if (!safeInput.equalsIgnoreCase(INVALID_INPUT.toString())) {
@@ -80,6 +99,14 @@ public class Transformation {
         return output;
     }
 
+    /**
+    * Operator is first evaluated to determine if it represents an operation or
+    * a part of an operand. Operands are added to the output while operators are
+    * compared with the last operator in the stack to define a priority hierarchy.
+    *
+    * @param  inputOp operator as Char
+    * @param  opType integer used to represent operators priority
+    */
     public void operator(char inputOp, int opType) {
         if (negOrPos == false) {
             boolean wasEmpty = true;
@@ -129,9 +156,13 @@ public class Transformation {
         } else {
             output = output + inputOp;
             lastChar = String.valueOf(inputOp);
-        }    //aggiunto questo if else in modo da assegnare non come operatore ma come segno del numero
+        }  
     }
-
+    
+    /**
+    * 
+    *
+    */
     public void parentheses() {
         while (!stack.isEmpty()) {
             char ch = stack.pop();

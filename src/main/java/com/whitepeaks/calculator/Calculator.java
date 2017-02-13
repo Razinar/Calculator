@@ -19,9 +19,16 @@ import org.apfloat.ApfloatMath;
 import org.apfloat.OverflowException;
 
 /**
- *
- * @author Stefano Galli
- */
+* Calculator class grants methods to execute a calculation based on Reverse
+* Polish Notation which is a Postfix calculation technic. As user input a
+* properly written arithmetic expression a real time result appears on the
+* screen, otherwise user is suggested to correct it.
+* <p>
+* Real numbers and parentheses are accepted, as well as basic operations (+, -,
+* *, /, ^) and backspace to delete last keyboard input.
+*
+* @author Stefano Galli
+*/
 public class Calculator {
 
     public static void main(String[] args) throws IOException, Exception {
@@ -64,6 +71,14 @@ public class Calculator {
         AnsiConsole.systemUninstall();
     }
 
+    /*
+    * Prints the console UI interface for the command line calculator
+    *
+    * @param  out  printwriter to write to
+    * @param  input the string that is being typed by the user
+    * @param  output the string that has been calculated
+    * @throws IOException
+    */
     private static void UI(PrintWriter out, String input, String output) throws IOException {
         out.println(Ansi.ansi().cursor(0, 0));
         out.println(Ansi.ansi().eraseScreen());
@@ -73,6 +88,12 @@ public class Calculator {
         out.flush();
     }
 
+    /*
+    * Execute Calculate(String s) on user input and result is converted into String
+    *
+    * @param  input the string that is being typed by the user
+    * @return formatted result as String
+    */
     public static String calculateString(String input) {
         try {
             return String.valueOf(Calculator.Calculate(input).toPlainString());
@@ -89,6 +110,15 @@ public class Calculator {
         }
     }
 
+    /*
+    * Transform user input into Postfix notation before result is calculated.
+    * Calculation is performed by parsing the formatted string, pushing every operand into a stack.
+    * Once an operator appears, last 2 operands are popped out from the stack and operator applied to them.
+    *
+    * @param  s the string that is being typed by the user
+    * @return Calculation result as BigDecimal
+    * @throws ArithmeticException
+    */
     public static BigDecimal Calculate(String s) throws ArithmeticException {
         Transformation Trans = new Transformation(s);
         String postFix = Trans.toPostfix();
