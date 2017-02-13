@@ -146,8 +146,7 @@ public class Transformation {
                 }
             }
             stack.push(inputOp);
-            //aggiunge uno sazio solo se lo stack era vuoto e se l'ultimo carattere Ã¨ diverso dall'iniziale o dallo spazio
-            //serve per evitare errore 4-4 ----> 44 -
+            //check used to avoid error like: "4-4 ----> 44 -" at input start
             if (wasEmpty == true && !lastChar.equals(EMPTY.toString()) && !lastChar.equals(WS)) {
                 output = output + WS;
                 lastChar = WS.toString();
@@ -160,8 +159,9 @@ public class Transformation {
     }
     
     /**
-    * 
-    *
+    * Used to evaluate right parentheses' and to determine what's inside left 
+    * and right parentheses to define a priority hierarchy in a Postfix notation
+    * String.
     */
     public void parentheses() {
         while (!stack.isEmpty()) {
@@ -179,6 +179,18 @@ public class Transformation {
         }
     }
 
+    /**
+    * Format input string to be easily converted into Postfix notation.
+    * Fix an input starting with + or -
+    * Return an error message if left or right parentheses are preceded or 
+    * followed by an operand, respectively.
+    * Fix input with redundant or consecutive operators.
+    * Fix input where left parentheses are preceded by - operator.
+    * Fix input where *^/ are followed by another operator
+    * 
+    * 
+    * @return formatted input to be converted into Postfix notation
+    */
     public String formatInput() {
         StringBuffer formatted = new StringBuffer(input);
         if (formatted.length() > 0) {
