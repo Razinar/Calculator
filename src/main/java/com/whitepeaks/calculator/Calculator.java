@@ -27,8 +27,8 @@ public class Calculator {
     public static void main(String[] args) throws IOException, Exception {
         AnsiConsole.systemInstall();
         ConsoleReader reader = new ConsoleReader(System.in, System.out);
-        System.out.println(Ansi.ansi().eraseScreen());
         PrintWriter out = new PrintWriter(reader.getOutput());
+        out.println(Ansi.ansi().eraseScreen());
         final int ESC = 27;
         final int BACKSPACE = 8;
         String input = INPUT.toString();
@@ -59,16 +59,15 @@ public class Calculator {
             }
             UI(out, input, total);
         }
-        System.out.println(Ansi.ansi().eraseScreen());
         AnsiConsole.systemUninstall();
     }
 
     private static void UI(PrintWriter out, String input, String output) throws IOException {
         out.println(Ansi.ansi().cursor(0, 0));
-        out.println(Ansi.ansi().eraseLine().fgRed().bold().a(INPUTUI.toString()).fgDefault().boldOff().a(input).saveCursorPosition());
-        out.println(Ansi.ansi().eraseLine().a(""));
+        out.println(Ansi.ansi().eraseScreen());
+        out.println(Ansi.ansi().fgRed().bold().a(INPUTUI.toString()).fgDefault().boldOff().a(input));
+        out.println(Ansi.ansi().a(""));
         out.println(Ansi.ansi().eraseLine().fgGreen().bold().a(OUTPUTUI.toString()).boldOff().fgDefault().a(output));
-        out.println(Ansi.ansi().restoreCursorPosition());
         out.flush();
     }
 
