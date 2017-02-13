@@ -1,7 +1,7 @@
 # Calculator
 
-Calculator is a console program to execute real time calculation based on Reverse Polish Notation, a Postfix calculation technic. 
-As the user inputs a properly written arithmetic expression a real time result appears on the screen; if an error is present the user is suggested to correct it.
+Calculator is a console program to execute **real time calculation** based on Reverse Polish Notation, a Postfix calculation technic. 
+As the user inputs a properly written arithmetic expression a real time result appears on the screen; if an error is present the user is suggested to correct it. The user does not have to press the enter key to see the results of the calculation.
 Real numbers and parentheses are accepted, as well as basic operations (+, -, *, /, ^) and backspace to delete last keyboard input.
 
 COMPILE:
