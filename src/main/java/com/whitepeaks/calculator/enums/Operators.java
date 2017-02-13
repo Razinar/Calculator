@@ -1,4 +1,4 @@
-package com.whitepeak.calculator.enums;
+package com.whitepeaks.calculator.enums;
 
 public enum Operators {
     PLUS('+'),MINUS('-'),TIMES('*'),DIVIDE('/'),EXP('^'),LPAR('('),RPAR(')'),DECIMAL('.'),WS(' '),EMPTY(Character.MIN_VALUE),FAIL('!');

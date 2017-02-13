@@ -1,4 +1,4 @@
-package com.whitepeak.calculator;
+package com.whitepeaks.calculator;
 
 import java.math.BigDecimal;
 

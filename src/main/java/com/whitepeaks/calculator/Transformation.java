@@ -1,20 +1,17 @@
-package com.whitepeak.calculator;
+package com.whitepeaks.calculator;
 
-import com.whitepeak.calculator.enums.Operators;
-
-import static com.whitepeak.calculator.enums.Operators.*;
-
-import static com.whitepeak.calculator.enums.Messages.*;
-
+import com.whitepeaks.calculator.enums.Operators;
+import static com.whitepeaks.calculator.enums.Operators.*;
+import static com.whitepeaks.calculator.enums.Messages.*;
 
 /**
  * @author Stefano Galli
  */
 public class Transformation {
+
     private TranStack stack;
     private String input, lastChar, output;
     private boolean negOrPos;
-
 
     public Transformation(String in) {
         input = in;
@@ -57,12 +54,13 @@ public class Transformation {
                         break;
 
                     default:
-                        if ((lastChar.equals("+") || lastChar.equals("-") ||
-                                lastChar.equals("*") || lastChar.equals("/") ||
-                                lastChar.equals("^")) && negOrPos == false)
+                        if ((lastChar.equals("+") || lastChar.equals("-")
+                                || lastChar.equals("*") || lastChar.equals("/")
+                                || lastChar.equals("^")) && negOrPos == false) {
                             output = output + WS + ch;
-                        else
+                        } else {
                             output = output + ch;
+                        }
                         lastChar = String.valueOf(ch);
                         negOrPos = false;
                         break;
@@ -70,10 +68,11 @@ public class Transformation {
             }
             while (!stack.isEmpty()) {
                 char ch = stack.pop();
-                if (lastChar.equals(WS))
+                if (lastChar.equals(WS)) {
                     output = output + ch;
-                else
+                } else {
                     output = output + WS + ch;
+                }
                 lastChar = String.valueOf(ch);
 
             }
@@ -96,10 +95,11 @@ public class Transformation {
                     break;
                 } else {
                     int topType;
-                    if (topOperation == PLUS.toChar() || topOperation == MINUS.toChar())
+                    if (topOperation == PLUS.toChar() || topOperation == MINUS.toChar()) {
                         topType = 1;
-                    else
+                    } else {
                         topType = 2;
+                    }
                     if (topType < opType) {
                         stack.push(topOperation);
                         if (!lastChar.equals(WS)) {
@@ -108,17 +108,18 @@ public class Transformation {
                         }
                         break;
                     } else {
-                        if (!lastChar.equals(WS))
+                        if (!lastChar.equals(WS)) {
                             output = output + WS + topOperation;
-                        else
+                        } else {
                             output = output + topOperation;
+                        }
                         lastChar = String.valueOf(topOperation);
                         break;
                     }
                 }
             }
             stack.push(inputOp);
-            //aggiunge uno sazio solo se lo stack era vuoto e se l'ultimo carattere è diverso dall'iniziale o dallo spazio
+            //aggiunge uno sazio solo se lo stack era vuoto e se l'ultimo carattere Ã¨ diverso dall'iniziale o dallo spazio
             //serve per evitare errore 4-4 ----> 44 -
             if (wasEmpty == true && !lastChar.equals(EMPTY.toString()) && !lastChar.equals(WS)) {
                 output = output + WS;
@@ -134,13 +135,14 @@ public class Transformation {
     public void parentheses() {
         while (!stack.isEmpty()) {
             char ch = stack.pop();
-            if (ch == LPAR.toChar())
+            if (ch == LPAR.toChar()) {
                 break;
-            else {
-                if (lastChar.equals(WS))
+            } else {
+                if (lastChar.equals(WS)) {
                     output = output + ch + WS;
-                else
+                } else {
                     output = output + WS + ch + WS;
+                }
                 lastChar = WS.toString();
             }
         }
@@ -150,19 +152,22 @@ public class Transformation {
         StringBuffer formatted = new StringBuffer(input);
         if (formatted.length() > 0) {
             //fix input starting with + or -
-            if (formatted.charAt(0) == PLUS.toChar() || formatted.charAt(0) == MINUS.toChar())
+            if (formatted.charAt(0) == PLUS.toChar() || formatted.charAt(0) == MINUS.toChar()) {
                 formatted.insert(0, '0');
-            
+            }
+
             for (int x = 0; x < formatted.length(); x++) {
                 switch (Operators.get(formatted.charAt(x))) {
                     case LPAR:
-                        if (x > 1 && (formatted.charAt(x - 1) == '.' || Character.isDigit(formatted.charAt(x - 1))))
+                        if (x > 1 && (formatted.charAt(x - 1) == '.' || Character.isDigit(formatted.charAt(x - 1)))) {
                             return INVALID_INPUT.toString();
+                        }
                         break;
 
                     case RPAR:
-                        if ((x + 1 < formatted.length()) && (formatted.charAt(x + 1) == '.' || Character.isDigit(formatted.charAt(x + 1))))
+                        if ((x + 1 < formatted.length()) && (formatted.charAt(x + 1) == '.' || Character.isDigit(formatted.charAt(x + 1)))) {
                             return INVALID_INPUT.toString();
+                        }
                         break;
 
                     //fix input with redundant or consecutive operators
@@ -174,7 +179,6 @@ public class Transformation {
                             }
                         }
                         break;
-
 
                     case MINUS:
                         if (x > 1) {
@@ -201,18 +205,21 @@ public class Transformation {
                             formatted.insert(x, LPAR);
                             int beforeClosing = 2;
                             for (int i = 0; i < formatted.length(); i++) {
-                                if (x + 2 + i > formatted.length() - 1)
+                                if (x + 2 + i > formatted.length() - 1) {
                                     break;
-                                if (formatted.charAt(x + 2 + i) == '.' || Character.isDigit(formatted.charAt(x + 2 + i)))
+                                }
+                                if (formatted.charAt(x + 2 + i) == '.' || Character.isDigit(formatted.charAt(x + 2 + i))) {
                                     beforeClosing++;
-                                else
+                                } else {
                                     break;
+                                }
                             }
 
-                            if (x + beforeClosing > formatted.length() - 1)
+                            if (x + beforeClosing > formatted.length() - 1) {
                                 formatted.append(RPAR);
-                            else
+                            } else {
                                 formatted.insert(x + beforeClosing, RPAR);
+                            }
                         }
 
                     }

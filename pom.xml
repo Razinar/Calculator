@@ -12,6 +12,11 @@
             <version>2.14.2</version>
         </dependency>
         <dependency>
+            <groupId>org.apfloat</groupId>
+            <artifactId>apfloat</artifactId>
+            <version>1.8.2</version>
+        </dependency>
+        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.12</version>
@@ -28,26 +33,26 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <executions>
-                  <execution>
-                    <id>bundle-with-jar</id>
-                    <phase>package</phase>
-                    <goals>
-                      <goal>single</goal>
-                    </goals>
-                    <configuration>
-                      <descriptorRefs>
-                            <descriptorRef>jar-with-dependencies</descriptorRef>
-                      </descriptorRefs>
-                      <archive>
-                        <manifest>
-                            <addClasspath>true</addClasspath>
-                            <mainClass>com.whitepeak.calculator.Calculator</mainClass>
-                        </manifest>
-                      </archive>
-                    </configuration>
-                  </execution>
+                    <execution>
+                        <id>bundle-with-jar</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <configuration>
+                            <descriptorRefs>
+                                <descriptorRef>jar-with-dependencies</descriptorRef>
+                            </descriptorRefs>
+                            <archive>
+                                <manifest>
+                                    <addClasspath>true</addClasspath>
+                                    <mainClass>com.whitepeaks.calculator.Calculator</mainClass>
+                                </manifest>
+                            </archive>
+                        </configuration>
+                    </execution>
                 </executions>
-              </plugin>
+            </plugin>
         </plugins>
     </build>
 </project>
