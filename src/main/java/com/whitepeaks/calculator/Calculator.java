@@ -31,6 +31,7 @@ public class Calculator {
         out.println(Ansi.ansi().eraseScreen());
         final int ESC = 27;
         final int BACKSPACE = 8;
+        final int DELETE = 127;
         String input = INPUT.toString();
         int ascii = -1;
         String total = TOTAL.toString();
@@ -41,6 +42,7 @@ public class Calculator {
             ascii = reader.readCharacter();
             switch (ascii) {
                 case BACKSPACE:
+                case DELETE:
                     if (input.length() > 0) {
                         input = input.substring(0, input.length() - 1);
                         total = calculateString(input);
